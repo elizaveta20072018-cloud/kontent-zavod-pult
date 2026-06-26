@@ -1232,6 +1232,8 @@ const INITIAL_TOPICS = [
   { title: 'Столб 1 · Реклама — входная дверь. Что ставить рядом (TG)', rubric: 'expert', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-07-01' },
   { title: 'Столб 1 · «У меня нет времени на маркетинг» — дело не во времени (TG)', rubric: 'objection', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-07-03' },
   { title: 'Столб 1 · Обсуждение: из 10 клиентов сколько пришли сами? (TG)', rubric: 'discussion', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-07-04' },
+  { title: 'Столб 1 · Ветка «Почему сарафан затухает» (Threads)', rubric: 'discussion', status: 'done', platforms: ['Threads'], seo: '', scheduledDate: '2026-07-01' },
+  { title: 'Столб 1 · Тейк «Сарафан — не стратегия, а везение» (Threads)', rubric: 'discussion', status: 'done', platforms: ['Threads'], seo: '', scheduledDate: '2026-07-03' },
   // --- Столбы 2–6 — очередь в банке ---
   { title: 'Столб 2 · Реклама приводит заявки, а они не покупают. Где ломается продажа', rubric: 'pain', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: 'seo' },
   { title: 'Столб 3 · Воронка на языке бизнеса, а не маркетологов', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: 'seo' },
@@ -1383,7 +1385,7 @@ let dragId = null;
 let activeKanbanFilter = { rubric: 'all' };
 let activeBankFilter = { rubric: 'all' };
 
-const DATA_VERSION = 5;
+const DATA_VERSION = 6;
 
 function loadData() {
   const saved = localStorage.getItem('content_factory_topics');
