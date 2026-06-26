@@ -1256,13 +1256,13 @@ const INITIAL_TOPICS = [
   // ==================== СТОЛБЫ — НОВЫЙ ПЛАН (2026-06-26) ====================
   // ЦА — собственники. Ядро: классический маркетинг + контент + продажи + воронки. ИИ — отстройка (1 из 5).
   // --- Столб 1 «Сарафан кончился» — готовый пакет, неделя 1 (см. Готовые_посты/Столб_01...) ---
-  { title: 'Столб 1 · Сарафан — это эхо (TG-якорь)', rubric: 'pain', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-06-29' },
-  { title: 'Столб 1 · Сарафан кончился (лонгрид Дзен)', rubric: 'pain', status: 'done', platforms: ['Дзен'], seo: 'seo', scheduledDate: '2026-06-30' },
-  { title: 'Столб 1 · Реклама — входная дверь. Что ставить рядом (TG)', rubric: 'expert', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-07-01' },
-  { title: 'Столб 1 · «У меня нет времени на маркетинг» — дело не во времени (TG)', rubric: 'objection', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-07-03' },
-  { title: 'Столб 1 · Обсуждение: из 10 клиентов сколько пришли сами? (TG)', rubric: 'discussion', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-07-04' },
-  { title: 'Столб 1 · Ветка «Почему сарафан затухает» (Threads)', rubric: 'discussion', status: 'done', platforms: ['Threads'], seo: '', scheduledDate: '2026-07-01' },
-  { title: 'Столб 1 · Тейк «Сарафан — не стратегия, а везение» (Threads)', rubric: 'discussion', status: 'done', platforms: ['Threads'], seo: '', scheduledDate: '2026-07-03' },
+  { title: 'Столб 1 · Сарафан — это эхо (TG-якорь)', rubric: 'pain', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-06-27' },
+  { title: 'Столб 1 · Сарафан кончился (лонгрид Дзен)', rubric: 'pain', status: 'done', platforms: ['Дзен'], seo: 'seo', scheduledDate: '2026-06-28' },
+  { title: 'Столб 1 · Реклама — входная дверь. Что ставить рядом (TG)', rubric: 'expert', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-06-29' },
+  { title: 'Столб 1 · «У меня нет времени на маркетинг» — дело не во времени (TG)', rubric: 'objection', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-07-01' },
+  { title: 'Столб 1 · Обсуждение: из 10 клиентов сколько пришли сами? (TG)', rubric: 'discussion', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-07-02' },
+  { title: 'Столб 1 · Ветка «Почему сарафан затухает» (Threads)', rubric: 'discussion', status: 'done', platforms: ['Threads'], seo: '', scheduledDate: '2026-06-29' },
+  { title: 'Столб 1 · Тейк «Сарафан — не стратегия, а везение» (Threads)', rubric: 'discussion', status: 'done', platforms: ['Threads'], seo: '', scheduledDate: '2026-07-01' },
   // --- Столбы 2–6 — очередь в банке ---
   { title: 'Столб 2 · Реклама приводит заявки, а они не покупают. Где ломается продажа', rubric: 'pain', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: 'seo' },
   { title: 'Столб 3 · Воронка на языке бизнеса, а не маркетологов', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: 'seo' },
@@ -1414,7 +1414,7 @@ let dragId = null;
 let activeKanbanFilter = { rubric: 'all' };
 let activeBankFilter = { rubric: 'all' };
 
-const DATA_VERSION = 7;
+const DATA_VERSION = 8;
 
 function loadData() {
   const saved = localStorage.getItem('content_factory_topics');
@@ -1433,6 +1433,19 @@ function loadData() {
         topics.forEach(t => {
           if (/таргет/i.test(t.title)) { t.status = 'idea'; delete t.scheduledDate; }
         });
+      }
+      // v8: старт перенесён на 27 июня (Елизавета хочет начать раньше)
+      if (savedVersion < 8) {
+        const redate1 = {
+          'Столб 1 · Сарафан — это эхо (TG-якорь)': '2026-06-27',
+          'Столб 1 · Сарафан кончился (лонгрид Дзен)': '2026-06-28',
+          'Столб 1 · Реклама — входная дверь. Что ставить рядом (TG)': '2026-06-29',
+          'Столб 1 · «У меня нет времени на маркетинг» — дело не во времени (TG)': '2026-07-01',
+          'Столб 1 · Обсуждение: из 10 клиентов сколько пришли сами? (TG)': '2026-07-02',
+          'Столб 1 · Ветка «Почему сарафан затухает» (Threads)': '2026-06-29',
+          'Столб 1 · Тейк «Сарафан — не стратегия, а везение» (Threads)': '2026-07-01',
+        };
+        topics.forEach(t => { if (redate1[t.title]) { t.scheduledDate = redate1[t.title]; if (t.status === 'idea') t.status = 'done'; } });
       }
       saveData();
     }
