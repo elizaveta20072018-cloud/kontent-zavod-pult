@@ -969,10 +969,39 @@
   </div>
 
   <!-- CALENDAR -->
+  <style>
+  .cal-view-toggle{display:inline-flex;background:#eee;border-radius:8px;padding:2px;margin-right:10px}
+  .cal-view-btn{border:none;background:transparent;padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;color:#555}
+  .cal-view-btn.active{background:#fff;color:#111;box-shadow:0 1px 2px rgba(0,0,0,.12);font-weight:600}
+  .cal-week-list{display:flex;flex-direction:column;gap:8px}
+  .cwd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#fff;border:1px solid #ececec;border-radius:12px;cursor:pointer;transition:border-color .15s}
+  .cwd:hover{border-color:#c9c9c9}
+  .cwd-today{border-color:#2460b8;box-shadow:0 0 0 1px #2460b8 inset}
+  .cwd-open{border-bottom-left-radius:0;border-bottom-right-radius:0}
+  .cwd-left{display:flex;flex-direction:column;gap:2px}
+  .cwd-dow{font-size:12px;color:#9a9a9a}
+  .cwd-date{font-size:15px;font-weight:600;color:#222}
+  .cwd-right{display:flex;align-items:center;gap:5px;flex-wrap:wrap;justify-content:flex-end;max-width:45%}
+  .cwd-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+  .cwd-empty{color:#cfcfcf;font-size:18px;line-height:1}
+  .cwd-expand{background:#fafafa;border:1px solid #ececec;border-top:none;border-radius:0 0 12px 12px;padding:8px;margin-top:-8px;display:flex;flex-direction:column;gap:6px}
+  .cwd-post{display:flex;align-items:flex-start;gap:8px;padding:10px;background:#fff;border-radius:8px;cursor:pointer}
+  .cwd-post:hover{background:#f2f2f2}
+  .cwd-post .cwd-dot{margin-top:5px}
+  .cwd-post-title{font-size:14px;color:#222;line-height:1.35}
+  .cwd-post-meta{font-size:12px;color:#8a8a8a;margin-top:3px}
+  .cwd-add{margin-top:2px;border:1px dashed #cccccc;background:transparent;color:#666;padding:8px;border-radius:8px;font-size:13px;cursor:pointer}
+  .cwd-add:hover{border-color:#2460b8;color:#2460b8}
+  </style>
+
   <div id="section-calendar" class="section">
     <div class="cal-header">
-      <button class="cal-nav-btn" onclick="prevMonth()">&#8592;</button>
-      <button class="cal-nav-btn" onclick="nextMonth()">&#8594;</button>
+      <div class="cal-view-toggle">
+        <button class="cal-view-btn active" onclick="setCalView('week', this)">Неделя</button>
+        <button class="cal-view-btn" onclick="setCalView('month', this)">Месяц</button>
+      </div>
+      <button class="cal-nav-btn" onclick="calPrev()">&#8592;</button>
+      <button class="cal-nav-btn" onclick="calNext()">&#8594;</button>
       <span class="cal-month-title" id="cal-month-title"></span>
       <button class="cal-today-btn" onclick="goToday()">Сегодня</button>
     </div>
@@ -981,7 +1010,7 @@
       <span class="filter-label">Площадка:</span>
       <button class="filter-chip active" onclick="setCalFilter('all', this)">Все</button>
     </div>
-    <div class="cal-weekdays">
+    <div class="cal-weekdays" id="cal-weekdays" style="display:none">
       <div class="cal-weekday">Пн</div>
       <div class="cal-weekday">Вт</div>
       <div class="cal-weekday">Ср</div>
@@ -1772,7 +1801,86 @@ let schedulingDate = null;
 const MONTHS_RU = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const MONTHS_GENITIVE = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 
+// Локальное форматирование даты (без UTC-сдвига — иначе для Москвы +3 день уезжает назад)
+function ymd(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+let calViewMode = 'week';
+let calWeekStart = (function () { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); })();
+let expandedDay = ymd(new Date());
+const DOW_RU = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+
+function postsForDate(dateStr) {
+  return topics.filter(t => {
+    if (t.scheduledDate !== dateStr) return false;
+    if (t.status === 'idea') return false;
+    if (calPlatformFilter !== 'all' && !(t.platforms || []).includes(calPlatformFilter)) return false;
+    return true;
+  });
+}
+
 function renderCalendar() {
+  const weekdaysEl = document.getElementById('cal-weekdays');
+  if (calViewMode === 'week') {
+    if (weekdaysEl) weekdaysEl.style.display = 'none';
+    renderWeekView();
+  } else {
+    if (weekdaysEl) weekdaysEl.style.display = '';
+    renderMonthView();
+  }
+}
+
+function renderWeekView() {
+  const grid = document.getElementById('cal-grid');
+  grid.className = 'cal-week-list';
+  const start = calWeekStart;
+  const end = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 6);
+  document.getElementById('cal-month-title').textContent =
+    start.getDate() + ' ' + MONTHS_GENITIVE[start.getMonth()] + ' – ' + end.getDate() + ' ' + MONTHS_GENITIVE[end.getMonth()];
+  const todayStr = ymd(new Date());
+  const statusMap = { idea: 'Идея', wip: 'В работе', done: 'Готово', pub: 'Опубликовано' };
+
+  let html = '';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+    const dateStr = ymd(d);
+    const dayTopics = postsForDate(dateStr);
+    const isToday = dateStr === todayStr;
+    const isOpen = expandedDay === dateStr && dayTopics.length > 0;
+    const dots = dayTopics.map(t => {
+      const r = RUBRICS.find(x => x.id === t.rubric) || RUBRICS[0];
+      return `<span class="cwd-dot" style="background:${r.color}"></span>`;
+    }).join('');
+
+    html += `<div class="cwd${isToday ? ' cwd-today' : ''}${isOpen ? ' cwd-open' : ''}" onclick="toggleDay('${dateStr}')">
+      <div class="cwd-left">
+        <span class="cwd-dow">${DOW_RU[d.getDay()]}</span>
+        <span class="cwd-date">${d.getDate()} ${MONTHS_GENITIVE[d.getMonth()]}${isToday ? ' · сегодня' : ''}</span>
+      </div>
+      <div class="cwd-right">${dayTopics.length ? dots : '<span class="cwd-empty">—</span>'}</div>
+    </div>`;
+
+    if (isOpen) {
+      html += `<div class="cwd-expand">`;
+      html += dayTopics.map(t => {
+        const r = RUBRICS.find(x => x.id === t.rubric) || RUBRICS[0];
+        const plat = (t.platforms || []).join(' · ');
+        return `<div class="cwd-post" onclick="event.stopPropagation();editCard('${t.id}')">
+          <span class="cwd-dot" style="background:${r.color}"></span>
+          <div style="flex:1"><div class="cwd-post-title">${t.title}</div><div class="cwd-post-meta">${plat}${plat ? ' · ' : ''}${statusMap[t.status] || ''}</div></div>
+        </div>`;
+      }).join('');
+      html += `<button class="cwd-add" onclick="event.stopPropagation();openSchedule('${dateStr}')">+ запланировать на этот день</button>`;
+      html += `</div>`;
+    }
+  }
+  grid.innerHTML = html;
+}
+
+function renderMonthView() {
+  const grid = document.getElementById('cal-grid');
+  grid.className = 'cal-grid';
   const year = calDate.getFullYear();
   const month = calDate.getMonth();
 
@@ -1785,7 +1893,7 @@ function renderCalendar() {
   if (startDow === 0) startDow = 7;
   startDow -= 1;
 
-  const todayStr = new Date().toISOString().slice(0, 10);
+  const todayStr = ymd(new Date());
 
   const cells = [];
   for (let i = 0; i < startDow; i++) {
@@ -1799,15 +1907,9 @@ function renderCalendar() {
     cells.push({ date: new Date(year, month + 1, i), thisMonth: false });
   }
 
-  const grid = document.getElementById('cal-grid');
   grid.innerHTML = cells.map(cell => {
-    const dateStr = cell.date.toISOString().slice(0, 10);
-    const dayTopics = topics.filter(t => {
-      if (t.scheduledDate !== dateStr) return false;
-      if (t.status === 'idea') return false;
-      if (calPlatformFilter !== 'all' && !(t.platforms || []).includes(calPlatformFilter)) return false;
-      return true;
-    });
+    const dateStr = ymd(cell.date);
+    const dayTopics = postsForDate(dateStr);
     const isToday = dateStr === todayStr;
     const chips = dayTopics.map(t => {
       const rubric = RUBRICS.find(r => r.id === t.rubric) || RUBRICS[0];
@@ -1822,18 +1924,41 @@ function renderCalendar() {
   }).join('');
 }
 
-function prevMonth() {
-  calDate = new Date(calDate.getFullYear(), calDate.getMonth() - 1, 1);
+function setCalView(mode, btn) {
+  calViewMode = mode;
+  document.querySelectorAll('.cal-view-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
   renderCalendar();
 }
 
-function nextMonth() {
-  calDate = new Date(calDate.getFullYear(), calDate.getMonth() + 1, 1);
+function toggleDay(dateStr) {
+  expandedDay = (expandedDay === dateStr) ? null : dateStr;
+  renderCalendar();
+}
+
+function calPrev() {
+  if (calViewMode === 'week') {
+    calWeekStart = new Date(calWeekStart.getFullYear(), calWeekStart.getMonth(), calWeekStart.getDate() - 7);
+  } else {
+    calDate = new Date(calDate.getFullYear(), calDate.getMonth() - 1, 1);
+  }
+  renderCalendar();
+}
+
+function calNext() {
+  if (calViewMode === 'week') {
+    calWeekStart = new Date(calWeekStart.getFullYear(), calWeekStart.getMonth(), calWeekStart.getDate() + 7);
+  } else {
+    calDate = new Date(calDate.getFullYear(), calDate.getMonth() + 1, 1);
+  }
   renderCalendar();
 }
 
 function goToday() {
+  const t = new Date();
   calDate = new Date();
+  calWeekStart = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+  expandedDay = ymd(t);
   renderCalendar();
 }
 
