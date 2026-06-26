@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контент-завод — Давыдова Елизавета</title>
+<style>
+  @import url('data:text/css,');
+
+  :root {
+    --bg: #f2f2f7;
+    --surface: #ffffff;
+    --surface2: #f7f7fc;
+    --surface3: #ededf4;
+    --border: #dcdce8;
+    --accent: #9a7800;
+    --accent2: #b89000;
+    --text: #1a1a2e;
+    --text2: #5a5a72;
+    --text3: #9898b0;
+    --pain: #c93345;
+    --expert: #2e6fd4;
+    --process: #18a882;
+    --objection: #c87a20;
+    --personal: #8a38d0;
+    --compare: #2090c0;
+    --sale: #9a7800;
+    --idea-col: #ededf4;
+    --wip-col: #e2ecff;
+    --done-col: #e2f6f0;
+    --pub-col: #fdf5e0;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .logo-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--accent);
+    font-family: 'Georgia', serif;
+  }
+
+  .logo-sub {
+    font-size: 12px;
+    color: var(--text3);
+    font-style: italic;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0d0d0f;
+  }
+  .btn-primary:hover { background: var(--accent2); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+
+  /* NAV TABS */
+  .nav-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab {
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text2);
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* MAIN */
+  main { padding: 28px 32px; max-width: 1600px; margin: 0 auto; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* OVERVIEW */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+  }
+
+  .stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .stat-value { font-size: 36px; font-weight: 700; color: var(--text); line-height: 1; }
+  .stat-sub { font-size: 12px; color: var(--text2); margin-top: 6px; }
+
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .overview-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+
+  .overview-card h3 {
+    font-size: 13px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  .rubric-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .rubric-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .rubric-name { font-size: 13px; color: var(--text2); flex: 1; }
+  .rubric-count { font-size: 13px; color: var(--text); font-weight: 600; min-width: 24px; text-align: right; }
+  .rubric-track { flex: 2; height: 4px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
+  .rubric-fill { height: 100%; border-radius: 2px; transition: width 0.4s; }
+
+  .platform-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .platform-row:last-child { border-bottom: none; }
+
+  .platform-badge {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .platform-active { background: rgba(154,120,0,0.10); color: var(--accent); }
+  .platform-next { background: var(--surface3); color: var(--text3); }
+
+  .platform-stat { font-size: 12px; color: var(--text2); }
+
+  /* KANBAN */
+  .kanban-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-label { font-size: 12px; color: var(--text3); margin-right: 4px; }
+
+  .filter-chip {
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .filter-chip:hover { background: var(--surface2); color: var(--text); }
+  .filter-chip.active { border-color: var(--accent); color: var(--accent); background: rgba(154,120,0,0.08); }
+
+  .filter-divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
+
+  .kanban-board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    min-height: 600px;
+  }
+
+  .kanban-col {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .col-header {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+  }
+
+  .col-idea .col-header { background: #e6e6f0; }
+  .col-wip .col-header { background: #d8e6ff; }
+  .col-done .col-header { background: #d6f0e8; }
+  .col-pub .col-header { background: #faeec8; }
+
+  .col-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  .col-idea .col-title { color: var(--text2); }
+  .col-wip .col-title { color: #2460b8; }
+  .col-done .col-title { color: #158060; }
+  .col-pub .col-title { color: var(--accent); }
+
+  .col-count {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  .col-idea .col-count { background: var(--surface3); color: var(--text3); }
+  .col-wip .col-count { background: rgba(36,96,184,0.12); color: #2460b8; }
+  .col-done .col-count { background: rgba(21,128,96,0.12); color: #158060; }
+  .col-pub .col-count { background: rgba(154,120,0,0.12); color: var(--accent); }
+
+  .col-body {
+    padding: 10px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 200px;
+  }
+
+  .col-body::-webkit-scrollbar { width: 4px; }
+  .col-body::-webkit-scrollbar-track { background: transparent; }
+  .col-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .col-body.drag-over {
+    background: rgba(154,120,0,0.06);
+    outline: 2px dashed rgba(154,120,0,0.30);
+    outline-offset: -8px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-bottom: 8px;
+    cursor: grab;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .card:hover {
+    border-color: var(--surface3);
+    background: var(--surface3);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+
+  .card:active { cursor: grabbing; opacity: 0.8; }
+  .card.dragging { opacity: 0.3; }
+  .card.hidden { display: none; }
+
+  .card-rubric {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .card-rubric-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+
+  .card-title {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .card-platform {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text3);
+    border: 1px solid var(--border);
+  }
+
+  .card-seo {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    background: rgba(36,96,184,0.08);
+    color: #2460b8;
+    border: 1px solid rgba(36,96,184,0.18);
+  }
+
+  .card-actions {
+    position: absolute;
+    top: 8px; right: 8px;
+    display: none;
+    gap: 4px;
+  }
+
+  .card:hover .card-actions { display: flex; }
+
+  .card-btn {
+    width: 22px; height: 22px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface);
+    color: var(--text3);
+    transition: all 0.1s;
+  }
+
+  .card-btn:hover { background: var(--border); color: var(--text); }
+  .card-btn.del:hover { background: rgba(201,51,69,0.12); color: var(--pain); }
+
+  /* TOPIC BANK */
+  .bank-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .bank-search {
+    flex: 1;
+    max-width: 320px;
+    padding: 8px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .bank-search:focus { border-color: var(--accent); }
+  .bank-search::placeholder { color: var(--text3); }
+
+  .bank-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+  }
+
+  .bank-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .bank-card:hover {
+    border-color: rgba(154,120,0,0.30);
+    background: var(--surface2);
+  }
+
+  .bank-card.hidden { display: none; }
+
+  .bank-card-rubric {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .bank-card-title {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.45;
+    margin-bottom: 10px;
+  }
+
+  .bank-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .status-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+
+  .status-idea { background: var(--surface3); color: var(--text3); }
+  .status-wip { background: rgba(36,96,184,0.10); color: #2460b8; }
+  .status-done { background: rgba(21,128,96,0.10); color: #158060; }
+  .status-pub { background: rgba(154,120,0,0.10); color: var(--accent); }
+
+  .bank-add-btn {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 24px; height: 24px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(154,120,0,0.10);
+    color: var(--accent);
+    transition: all 0.1s;
+  }
+
+  .bank-card:hover .bank-add-btn { display: flex; }
+  .bank-add-btn:hover { background: rgba(154,120,0,0.20); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    width: 480px;
+    max-width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .modal h2 {
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 20px;
+    font-family: 'Georgia', serif;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background: var(--surface3);
+    color: var(--text2);
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .modal-close:hover { background: var(--border); color: var(--text); }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 12px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 9px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent);
+  }
+
+  .form-textarea { resize: vertical; min-height: 80px; }
+
+  .form-select option { background: var(--surface2); }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  /* PLATFORM ICONS */
+  .pi { font-style: normal; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* EMPTY STATE */
+  .empty-col {
+    text-align: center;
+    padding: 30px 10px;
+    color: var(--text3);
+    font-size: 12px;
+    font-style: italic;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1200px) {
+    .kanban-board { grid-template-columns: repeat(2, 1fr); }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    main { padding: 16px; }
+    header { padding: 14px 16px; }
+    .nav-tabs { padding: 0 16px; }
+    .kanban-board { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .overview-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ACCENT LINE */
+  .accentline {
+    height: 1px;
+    background: linear-gradient(to right, var(--accent), transparent);
+    margin: 24px 0;
+    opacity: 0.3;
+  }
+
+  /* CALENDAR */
+  .cal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .cal-hint {
+    font-size: 12px;
+    color: var(--text2);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+
+  .cal-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .cal-month-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+    font-family: 'Georgia', serif;
+  }
+
+  .cal-nav-btn {
+    width: 34px; height: 34px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .cal-nav-btn:hover { background: var(--surface2); color: var(--text); }
+
+  .cal-today-btn {
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 12px;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .cal-today-btn:hover { background: var(--surface2); color: var(--text); }
+
+  .cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .cal-weekday {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 6px 0;
+  }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .cal-day {
+    min-height: 96px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cal-day:hover { border-color: var(--accent); background: var(--surface2); }
+
+  .cal-day.other-month {
+    background: var(--surface2);
+    border-color: transparent;
+    opacity: 0.55;
+  }
+
+  .cal-day.today {
+    border-color: var(--accent);
+    background: rgba(154,120,0,0.04);
+  }
+
+  .cal-day-num {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text3);
+    margin-bottom: 5px;
+    line-height: 1;
+  }
+
+  .cal-day.today .cal-day-num {
+    color: var(--accent);
+    font-size: 13px;
+  }
+
+  .cal-chip {
+    display: block;
+    font-size: 10px;
+    line-height: 1.3;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-bottom: 3px;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: opacity 0.1s;
+    color: #fff;
+    font-weight: 500;
+  }
+  .cal-chip:hover { opacity: 0.8; }
+
+  .cal-add-hint {
+    font-size: 10px;
+    color: var(--text3);
+    font-style: italic;
+    display: none;
+    margin-top: 4px;
+  }
+  .cal-day:hover .cal-add-hint { display: block; }
+
+  /* SCHEDULE LIST */
+  .schedule-section-label {
+    font-size: 11px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    margin-top: 4px;
+  }
+
+  .schedule-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 12px 0;
+  }
+
+  .schedule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.1s;
+    margin-bottom: 3px;
+  }
+  .schedule-item:hover { background: var(--surface2); }
+  .schedule-item-active { background: rgba(154,120,0,0.06); }
+  .schedule-item-active:hover { background: rgba(154,120,0,0.10); }
+
+  .schedule-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .schedule-title {
+    font-size: 13px;
+    color: var(--text);
+    flex: 1;
+    line-height: 1.4;
+  }
+
+  .schedule-meta {
+    font-size: 10px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  .schedule-remove {
+    width: 20px; height: 20px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text3);
+    font-size: 11px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.1s;
+  }
+  .schedule-remove:hover { background: rgba(201,51,69,0.12); color: var(--pain); }
+
+  @media (max-width: 768px) {
+    .cal-grid { grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .cal-day { min-height: 60px; padding: 4px; }
+    .cal-chip { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-title">Контент-завод</span>
+    <span class="logo-sub">Давыдова Елизавета · Маркетолог</span>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-ghost" onclick="exportData()">Экспорт JSON</button>
+    <button class="btn btn-primary" onclick="openModal()">+ Добавить тему</button>
+  </div>
+</header>
+
+<nav class="nav-tabs">
+  <div class="tab active" onclick="switchTab('overview', this)">Обзор</div>
+  <div class="tab" onclick="switchTab('kanban', this)">Канбан</div>
+  <div class="tab" onclick="switchTab('bank', this)">Банк тем</div>
+  <div class="tab" onclick="switchTab('calendar', this)">Календарь</div>
+</nav>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <div id="section-overview" class="section active">
+    <div class="stats-grid" id="stats-grid"></div>
+    <div class="overview-grid">
+      <div class="overview-card">
+        <h3>По рубрикам</h3>
+        <div id="rubric-bars"></div>
+      </div>
+      <div class="overview-card">
+        <h3>Площадки</h3>
+        <div id="platform-stats"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KANBAN -->
+  <div id="section-kanban" class="section">
+    <div class="kanban-filters" id="kanban-filters">
+      <span class="filter-label">Рубрика:</span>
+      <button class="filter-chip active" onclick="setFilter('rubric', 'all', this)">Все</button>
+    </div>
+    <div class="kanban-board">
+      <div class="kanban-col col-idea" data-status="idea">
+        <div class="col-header">
+          <span class="col-title">Идея</span>
+          <span class="col-count" id="cnt-idea">0</span>
+        </div>
+        <div class="col-body" id="col-idea" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event, 'idea')"></div>
+      </div>
+      <div class="kanban-col col-wip" data-status="wip">
+        <div class="col-header">
+          <span class="col-title">В работе</span>
+          <span class="col-count" id="cnt-wip">0</span>
+        </div>
+        <div class="col-body" id="col-wip" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event, 'wip')"></div>
+      </div>
+      <div class="kanban-col col-done" data-status="done">
+        <div class="col-header">
+          <span class="col-title">Готово</span>
+          <span class="col-count" id="cnt-done">0</span>
+        </div>
+        <div class="col-body" id="col-done" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event, 'done')"></div>
+      </div>
+      <div class="kanban-col col-pub" data-status="pub">
+        <div class="col-header">
+          <span class="col-title">Опубликовано</span>
+          <span class="col-count" id="cnt-pub">0</span>
+        </div>
+        <div class="col-body" id="col-pub" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event, 'pub')"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BANK -->
+  <div id="section-bank" class="section">
+    <div class="bank-filters">
+      <input type="text" class="bank-search" id="bank-search" placeholder="Поиск по теме..." oninput="renderBank()">
+      <div class="filter-divider"></div>
+      <span class="filter-label">Рубрика:</span>
+      <button class="filter-chip active" onclick="setBankFilter('rubric', 'all', this)">Все</button>
+    </div>
+    <div class="bank-grid" id="bank-grid"></div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div id="section-calendar" class="section">
+    <div class="cal-header">
+      <button class="cal-nav-btn" onclick="prevMonth()">&#8592;</button>
+      <button class="cal-nav-btn" onclick="nextMonth()">&#8594;</button>
+      <span class="cal-month-title" id="cal-month-title"></span>
+      <button class="cal-today-btn" onclick="goToday()">Сегодня</button>
+    </div>
+    <div class="cal-hint">В календаре — только темы из «В работе», «Готово» и «Опубликовано». Перенеси тему в «В работе» в Канбане, чтобы она появилась тут на запланированной дате.</div>
+    <div class="cal-filters" id="cal-filters">
+      <span class="filter-label">Площадка:</span>
+      <button class="filter-chip active" onclick="setCalFilter('all', this)">Все</button>
+    </div>
+    <div class="cal-weekdays">
+      <div class="cal-weekday">Пн</div>
+      <div class="cal-weekday">Вт</div>
+      <div class="cal-weekday">Ср</div>
+      <div class="cal-weekday">Чт</div>
+      <div class="cal-weekday">Пт</div>
+      <div class="cal-weekday">Сб</div>
+      <div class="cal-weekday">Вс</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+</main>
+
+<!-- SCHEDULE MODAL -->
+<div class="modal-overlay" id="schedule-overlay" onclick="closeScheduleOutside(event)">
+  <div class="modal" style="width:520px">
+    <button class="modal-close" onclick="closeSchedule()">&#x2715;</button>
+    <h2 id="schedule-date-title">Запланировать</h2>
+    <input type="text" class="form-input" id="schedule-search" placeholder="Поиск по теме..." oninput="renderScheduleList()" style="margin-bottom:12px">
+    <div id="schedule-list" style="max-height:420px;overflow-y:auto"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2 id="modal-title">Новая тема</h2>
+    <div class="form-group">
+      <label class="form-label">Заголовок темы *</label>
+      <input type="text" class="form-input" id="f-title" placeholder="Например: 5 признаков, что ваш таргет сливает деньги">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Рубрика</label>
+        <select class="form-select" id="f-rubric"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Статус</label>
+        <select class="form-select" id="f-status">
+          <option value="idea">Идея</option>
+          <option value="wip">В работе</option>
+          <option value="done">Готово</option>
+          <option value="pub">Опубликовано</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Площадки (через запятую)</label>
+      <input type="text" class="form-input" id="f-platforms" placeholder="Telegram, VC.ru">
+    </div>
+    <div class="form-group">
+      <label class="form-label">SEO-статья?</label>
+      <select class="form-select" id="f-seo">
+        <option value="">Нет</option>
+        <option value="seo">Да (SEO)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Дата публикации</label>
+      <input type="date" class="form-input" id="f-date">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Заметки</label>
+      <textarea class="form-textarea" id="f-notes" placeholder="Идеи, структура, ключевые тезисы..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Отмена</button>
+      <button class="btn btn-primary" onclick="saveCard()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== DATA ====================
+
+const RUBRICS = [
+  { id: 'pain',       label: 'Боль',         color: '#c93345' },
+  { id: 'expert',     label: 'Экспертность', color: '#2e6fd4' },
+  { id: 'process',    label: 'Процесс',      color: '#18a882' },
+  { id: 'objection',  label: 'Возражения',   color: '#c87a20' },
+  { id: 'personal',   label: 'Личное',       color: '#8a38d0' },
+  { id: 'compare',    label: 'Сравнение',    color: '#2090c0' },
+  { id: 'sale',       label: 'Продажа',      color: '#9a7800' },
+  { id: 'discussion', label: 'Обсуждение',   color: '#d6457f' },
+];
+
+const PLATFORMS = [
+  { id: 'telegram', label: 'Telegram', active: true },
+  { id: 'threads',  label: 'Threads',  active: true },
+  { id: 'vc',       label: 'VC.ru',    active: true },
+  { id: 'dzen',     label: 'Дзен',     active: true },
+  { id: 'vk',       label: 'ВКонтакте', active: false },
+  { id: 'insta',    label: 'Instagram', active: false },
+];
+
+const INITIAL_TOPICS = [
+  // БОЛЬ
+  { title: '5 признаков, что ваш таргет сливает деньги прямо сейчас', rubric: 'pain', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+  { title: 'Почему у конкурентов клиентов больше, хотя продукт хуже', rubric: 'pain', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Вы говорите «маркетинг не работает». Сейчас объясню, что это значит на самом деле', rubric: 'pain', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Автосервис без контента в 2026 — как магазин без вывески', rubric: 'pain', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+  { title: '3 вещи, которые собственники делают вместо маркетинга — и не замечают этого', rubric: 'pain', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Сарафанка — это не маркетинг. Вот что происходит, когда она заканчивается', rubric: 'pain', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'В эти мифы о маркетинге верят почти все собственники — и теряют деньги', rubric: 'pain', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Почему малый и средний бизнес теряет деньги без системного маркетинга', rubric: 'pain', status: 'idea', platforms: ['VC.ru', 'Дзен'], seo: 'seo' },
+  { title: 'Как понять, что маркетолог просто имитирует работу: 7 сигналов', rubric: 'pain', status: 'idea', platforms: ['VC.ru', 'Дзен'], seo: 'seo' },
+  { title: 'Маркетинг для автосервиса: что работает в 2026', rubric: 'pain', status: 'idea', platforms: ['VC.ru', 'Дзен'], seo: 'seo' },
+  { title: 'Продвижение клиники пластической хирургии: ошибки и решения', rubric: 'pain', status: 'idea', platforms: ['VC.ru', 'Дзен'], seo: 'seo' },
+
+  // ЭКСПЕРТНОСТЬ
+  { title: 'Кейс: как мы связали CRM, контент и 4 соцсети в одну систему — и что из этого вышло', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+  { title: 'Кейс: клиника пластической хирургии — с нуля до очереди на 2 недели вперёд', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+  { title: 'Кейс: автосервис — снизили стоимость заявки в 2,5 раза. Разбор', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: 'seo' },
+  { title: 'Кейс: глемпинг — с 0 до sold out за сезон. Без бюджета на рекламу', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+  { title: 'Кейс: типография — стабильный поток клиентов только на контенте', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+  { title: 'Провалила проект. Разбираю, что пошло не так — и что изменила после', rubric: 'expert', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: '3 ошибки в контенте, которые вижу у 80% клиентов', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Пока большинство маркетологов делают вот это — я работаю иначе', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+  { title: 'Мнение вслух: кейс без цифр — это просто красивая история', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+
+  // ПРОЦЕСС
+  { title: 'Как выглядит первый месяц работы со мной: по шагам', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Полное ведение за 45 000: что я делаю каждый день — без приукрашивания', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Я не делаю контент-план без клиента. Объясняю, почему это принципиально', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Я говорю клиенту плохие новости первой. Вот как это устроено', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Показываю свой отчёт клиенту: как выглядит и зачем такой формат', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Один день фриланс-маркетолога: что реально происходит за кулисами', rubric: 'process', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'У меня несколько проектов одновременно. Вот как я не теряю качество', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Клиенты остаются со мной по 2–4 года. Вот что за этим стоит', rubric: 'process', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+
+  // ВОЗРАЖЕНИЯ
+  { title: '«Мы уже пробовали, не работает» — разбираю по пунктам', rubric: 'objection', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Мнение вслух: маркетинг через ИИ — это не маркетинг. Объясняю', rubric: 'objection', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: '«Ваши услуги дорогие» — давайте посчитаем', rubric: 'objection', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: '«В нашей нише реклама не работает» — слышу это раз в неделю. Вот что отвечаю', rubric: 'objection', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: '«Нам не нужен контент — нам нужны клиенты» — окей, разбираем', rubric: 'objection', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: '5 вопросов, чтобы отличить работающего маркетолога от красиво отчитывающегося', rubric: 'objection', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+
+  // ЛИЧНОЕ
+  { title: 'Меня зовут Елизавета. Я маркетолог — но, скорее всего, не такой, каким вы их представляете', rubric: 'personal', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Авто, медицина, типографии — и ни одного бьюти-клиента. Это не случайность', rubric: 'personal', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Несколько лет фриланса: что узнала, что изменила — и чего бы не сделала снова', rubric: 'personal', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Я прохожу курсы, даже когда очередь из клиентов. Объясняю зачем', rubric: 'personal', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Без офиса, без дресс-кода, без пробок. Как выглядит мой рабочий день', rubric: 'personal', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Я осознанно не строю агентство. Это не страх — вот почему', rubric: 'personal', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Говорю, что меня бесит в рынке маркетинга. Молчать надоело', rubric: 'personal', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+
+  // СРАВНЕНИЕ
+  { title: 'Фрилансер vs агентство vs штатный специалист', rubric: 'compare', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: 'seo' },
+  { title: 'Как проверить маркетолога до найма: 7 вопросов', rubric: 'compare', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+  { title: '3 признака кейса, которому можно верить — и 2, что перед вами красивая ложь', rubric: 'compare', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Как выбрать таргетолога, который не сольёт бюджет', rubric: 'compare', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: 'seo' },
+  { title: 'Контент или таргет: честный разбор без попытки продать себя', rubric: 'compare', status: 'idea', platforms: ['Telegram', 'VC.ru', 'Threads'], seo: '' },
+
+  // ПРОДАЖА
+  { title: 'Закреп Telegram: кто я + услуги + как написать', rubric: 'sale', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Как поработать со мной: форматы, цены, условия', rubric: 'sale', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Открываю 1 место на аудит', rubric: 'sale', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: '3 года, 5 ниш, 10+ клиентов. Смотрите, что получилось — и как это можно повторить', rubric: 'sale', status: 'idea', platforms: ['Telegram'], seo: '' },
+
+  // БОЛЬ — новые
+  { title: '7 признаков, что вы переросли «справляться с маркетингом самому»', rubric: 'pain', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Считаем, сколько на самом деле стоит «сэкономить» на маркетинге', rubric: 'pain', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+  { title: 'Почему бизнес теряет деньги на маркетологе-универсале', rubric: 'pain', status: 'idea', platforms: ['VC.ru', 'Дзен'], seo: 'seo' },
+  { title: 'Контент выходит. Заявок нет. Разбираю по пунктам, почему так', rubric: 'pain', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Три точки, где бизнес каждый день теряет клиентов — и не замечает', rubric: 'pain', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+
+  // ЭКСПЕРТНОСТЬ — новые
+  { title: 'Как я строю систему контента для клиента с нуля — по шагам', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+  { title: 'Мой рабочий стек: 6 инструментов, без которых не берусь за проект', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Разбираю 3 реальных аккаунта: что в контенте работает, а что тихо сливает деньги', rubric: 'expert', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Как я провожу аудит маркетинга за 2 часа', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+  { title: 'Кейс: как за 3 месяца выстроить поток заявок без бюджета на рекламу', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: 'seo' },
+
+  // ПРОЦЕСС — новые
+  { title: 'Я отказываюсь от проекта без предварительного аудита. Вот почему это принципиально', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Первая встреча с клиентом: что происходит и какие вопросы задаю', rubric: 'process', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Как я понимаю, что моя работа реально приносит деньги — не по ощущениям', rubric: 'process', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: '' },
+  { title: 'Я пишу отчёт, даже когда всё идёт хорошо. Зачем — объясняю', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+
+  // ВОЗРАЖЕНИЯ — новые
+  { title: '«У нас всё норм, клиенты есть» — что будет через год', rubric: 'objection', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Почему дешёвый маркетолог обходится дороже хорошего', rubric: 'objection', status: 'idea', platforms: ['VC.ru', 'Дзен'], seo: 'seo' },
+  { title: '«Сделаем сами» — честный разбор, когда это работает', rubric: 'objection', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: '«Нам нужен результат в первый же месяц» — честно о том, как бывает в реальности', rubric: 'objection', status: 'idea', platforms: ['Telegram'], seo: '' },
+
+  // ЛИЧНОЕ — новые
+  { title: 'Как я случайно попала в маркетинг — и почему это оказалось не случайностью', rubric: 'personal', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: '5 книг, после которых я перестала делать маркетинг интуитивно', rubric: 'personal', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: '2026: называю цели вслух — и объясняю, зачем говорю об этом публично', rubric: 'personal', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Честная карта навыков: что умею, что нет — и почему это важно знать до того, как написать мне', rubric: 'personal', status: 'idea', platforms: ['Telegram'], seo: '' },
+
+  // СРАВНЕНИЕ — новые
+  { title: 'Telegram vs Instagram для продвижения B2B-бизнеса', rubric: 'compare', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: 'seo' },
+  { title: 'SEO vs таргет: куда вложить первые 50 тысяч', rubric: 'compare', status: 'idea', platforms: ['VC.ru', 'Дзен'], seo: 'seo' },
+  { title: 'Маркетолог-аутсорс vs штатный: что выгоднее малому бизнесу', rubric: 'compare', status: 'idea', platforms: ['Telegram', 'VC.ru'], seo: 'seo' },
+
+  // ПРОДАЖА — новые
+  { title: 'Форматы работы: что входит в каждый пакет', rubric: 'sale', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Беру 1 клиента в мае — условия и что вы получите', rubric: 'sale', status: 'idea', platforms: ['Telegram'], seo: '' },
+
+  // ОБСУЖДЕНИЕ — короткие посты-вопросы под Threads, чтобы провоцировать комментарии
+  { title: 'Какой пост в вашей ленте за последний месяц реально захотелось переслать другу — и почему?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Назовите одну вещь, которую вам говорил «эксперт», и она оказалась полной чушью', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Сколько постов в неделю — это уже перебор для собственника?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Если бы вам дали 100к на маркетинг прямо сейчас — куда вложили бы первым делом?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'ИИ заменит копирайтеров — да или ни в жизни?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Что бесит в маркетологах больше всего: цена, нежелание вникать или красивое враньё в кейсах?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Кейсы с цифрами — обязательно или их можно заменить хорошими отзывами?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Самая дурацкая просьба клиента, с которой вы сталкивались?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Личный бренд маркетолога — must или хайп?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Вы бы взяли клиента, чей продукт вам не нравится, за хорошие деньги?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Telegram или VC.ru — где сейчас удобнее читать про маркетинг?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Цена в посте — отпугивает или фильтрует «не своих»?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Маркетолог без своего блога — нормально или красные флаги?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Самый тупой совет про продвижение, который вы видели в этом году?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Кто из маркетологов в Telegram реально пишет интересно? Киньте 1 ссылку — изучу', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Какой формат контента вы лично НЕ читаете никогда?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Платить за консультации экспертам — или это уже моветон?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Что вы сделали для бизнеса в этом месяце, что реально дало результат?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+
+  // ОБСУЖДЕНИЕ — широкие темы для ЦА (финансы, налоги, команда, жизнь, выгорание)
+  { title: 'Какой налоговый режим у вашего бизнеса — и не жалеете ли о выборе?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Дивиденды или зарплата — как вы платите себе из бизнеса?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Где собственники реально хранят деньги, кроме расчётного счёта?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Кредит на бизнес — пользовались? Стоило?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Сколько часов в неделю реально работает собственник — честно?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Что съедает у собственника больше всего времени в бизнесе?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Делегировать или контролировать — где у вас проходит грань?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Самый дорогой сотрудник, которого вы наняли — оправдал?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Удалёнка для команды — выгоднее или, наоборот, геморройнее?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Платить выше рынка или больше учить — что выбираете для команды?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Сколько отпуска в году у вас реально — а не на бумаге?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Когда последний раз вы выгорали — и как восстановились?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Спорт и бизнес — успеваете заниматься или это миф?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Главная ошибка в первый год бизнеса — у каждого своя?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Самый дорогой урок, который дал вам бизнес?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Если бы начинали свой бизнес сейчас — что сделали бы иначе?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'Сколько лет вашему бизнесу — и какой год был самый сложный?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+  { title: 'ИИ в малом бизнесе — где реально помогает, а где переоценён?', rubric: 'discussion', status: 'idea', platforms: ['Threads'], seo: '' },
+
+  // ==================== СТОЛБЫ — НОВЫЙ ПЛАН (2026-06-26) ====================
+  // ЦА — собственники. Ядро: классический маркетинг + контент + продажи + воронки. ИИ — отстройка (1 из 5).
+  // --- Столб 1 «Сарафан кончился» — готовый пакет, неделя 1 (см. Готовые_посты/Столб_01...) ---
+  { title: 'Столб 1 · Сарафан — это эхо (TG-якорь)', rubric: 'pain', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-06-29' },
+  { title: 'Столб 1 · Сарафан кончился (лонгрид Дзен)', rubric: 'pain', status: 'done', platforms: ['Дзен'], seo: 'seo', scheduledDate: '2026-06-30' },
+  { title: 'Столб 1 · Реклама — входная дверь. Что ставить рядом (TG)', rubric: 'expert', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-07-01' },
+  { title: 'Столб 1 · «У меня нет времени на маркетинг» — дело не во времени (TG)', rubric: 'objection', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-07-03' },
+  { title: 'Столб 1 · Обсуждение: из 10 клиентов сколько пришли сами? (TG)', rubric: 'discussion', status: 'done', platforms: ['Telegram'], seo: '', scheduledDate: '2026-07-04' },
+  // --- Столбы 2–6 — очередь в банке ---
+  { title: 'Столб 2 · Реклама приводит заявки, а они не покупают. Где ломается продажа', rubric: 'pain', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: 'seo' },
+  { title: 'Столб 3 · Воронка на языке бизнеса, а не маркетологов', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: 'seo' },
+  { title: 'Столб 4 · Нужен ли вашему бизнесу блог, если вы не блогер', rubric: 'objection', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: '' },
+  { title: 'Столб 5 · Я отдала маркетинг нейросети на неделю — почему бизнесу нужен человек', rubric: 'personal', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: '' },
+  { title: 'Столб 6 (запас) · Где ИИ-маркетинг хайп, а где реальные деньги', rubric: 'objection', status: 'idea', platforms: ['Telegram'], seo: '' },
+];
+
+// ==================== SCHEDULE ====================
+// Автоматически назначается при первой загрузке. Не перетирает даты, выставленные вручную.
+
+const SCHEDULE = {
+  // === АПРЕЛЬ — горячий старт ===
+  'Закреп Telegram: кто я + услуги + как написать':                              '2026-04-29',
+  'Беру 1 клиента в мае — условия и что вы получите':                           '2026-04-30',
+
+  // === МАЙ 1–15 — Фаза 1: Осознание боли ===
+  'Знакомство: кто я и почему маркетолог (стартовый пост)':                      '2026-05-01',
+  'Почему малый и средний бизнес теряет деньги без системного маркетинга':       '2026-05-03',
+  '5 признаков, что ваш таргет сливает деньги прямо сейчас':                    '2026-05-04',
+  'Как выглядит первый месяц работы со мной: по шагам':                         '2026-05-05',
+  'Почему мне интереснее работать с мужскими нишами':                           '2026-05-06',
+  'Почему у конкурентов клиентов больше, хотя продукт хуже':                    '2026-05-07',
+  'Кейс: Усунгван — CRM + контент + видео + несколько соцсетей':                '2026-05-08',
+  'Почему бизнес теряет деньги на маркетологе-универсале':                      '2026-05-10',
+  'Что на самом деле значит «маркетинг не работает»':                           '2026-05-11',
+  'Что входит в полное ведение за 45–50 тысяч':                                 '2026-05-12',
+  'Чек-лист: 7 признаков, что пора нанять маркетолога':                         '2026-05-13',
+  'Кейс: автосервис — снизили стоимость лида':                                  '2026-05-14',
+  'Что я узнала за несколько лет фриланса':                                     '2026-05-15',
+
+  // === МАЙ 16–31 — Фаза 2: Экспертность и доверие ===
+  'Маркетинг для автосервиса: что работает в 2026':                             '2026-05-17',
+  '3 ошибки в контенте, которые вижу у 80% клиентов':                           '2026-05-18',
+  'Как я строю систему контента для клиента с нуля — по шагам':                 '2026-05-19',
+  'Кейс: пластическая хирургия — поток записей':                                '2026-05-20',
+  '3 вещи, которые собственники делают вместо маркетинга':                      '2026-05-21',
+  'Закулисье: один рабочий день маркетолога':                                   '2026-05-22',
+  'Продвижение клиники пластической хирургии: ошибки и решения':                '2026-05-24',
+  'Автосервис без контента в 2026 — как магазин без вывески':                   '2026-05-25',
+  'Как я составляю контент-план и почему не делаю без клиента':                  '2026-05-26',
+  'Кейс: глемпинг — заполнили бронирования':                                   '2026-05-27',
+  'Сколько стоит плохой маркетинг — считаем вместе':                            '2026-05-28',
+  'Почему я учусь, даже когда уже работаю':                                     '2026-05-29',
+  'Как понять, что ваш маркетолог работает неэффективно':                       '2026-05-31',
+
+  // === ИЮНЬ 1–14 — Фаза 2 продолжение: процесс + личное ===
+  'Почему бизнес на сарафанке рано или поздно замирает':                        '2026-06-01',
+  'Инструменты, которые я использую каждый день':                               '2026-06-02',
+  'Почему мои клиенты работают со мной 2-4 года':                               '2026-06-03',
+  'Когда контент есть, а клиентов нет — разбираю по пунктам':                  '2026-06-04',
+  'Почему я не хочу агентство':                                                 '2026-06-05',
+  'Telegram vs Instagram для продвижения B2B-бизнеса':                          '2026-06-07',
+  'Что я делаю иначе, чем большинство маркетологов':                            '2026-06-09',
+  'Честный провал: кейс, который не получился, и выводы':                       '2026-06-10',
+  'Почему кейс без цифр — не кейс':                                            '2026-06-11',
+  'Кейс: типография — системный контент':                                       '2026-06-12',
+  'SEO vs таргет: куда вложить первые 50 тысяч':                                '2026-06-14',
+
+  // === ИЮНЬ 15–28 — Фаза 3: Возражения и сравнения ===
+  '«Мы уже пробовали, не работает» — разбираю по пунктам':                     '2026-06-15',
+  'Фрилансер vs агентство vs штатный специалист':                               '2026-06-16',
+  '«Ваши услуги дорогие» — давайте посчитаем':                                 '2026-06-17',
+  'Контент-маркетинг vs таргет: что выбрать':                                   '2026-06-18',
+  '«У нас всё норм, клиенты есть» — что будет через год':                      '2026-06-19',
+  'Маркетолог-аутсорс vs штатный: что выгоднее малому бизнесу':                '2026-06-21',
+  '«Нам не нужен контент, нам нужны клиенты»':                                  '2026-06-22',
+  'Как проверить маркетолога до найма: 7 вопросов':                             '2026-06-23',
+  '«Сделаем сами» — честный разбор, когда это работает':                       '2026-06-24',
+  'Почему маркетинг через ИИ — это не маркетинг':                               '2026-06-25',
+  'Как понять, что маркетолог делает своё дело, а не красиво отчитывается':     '2026-06-26',
+  'Как выбрать таргетолога, который не сольёт бюджет':                          '2026-06-28',
+
+  // === ИЮНЬ 29 – ИЮЛЬ 3 — Фаза 4: Конверсия ===
+  'Как со мной поработать (раз в месяц)':                                       '2026-06-29',
+  'Кейс: как за 3 месяца выстроить поток заявок без бюджета на рекламу':        '2026-06-30',
+  'Открываю 1 место на аудит':                                                  '2026-07-01',
+  'Пост с кейсами + CTA':                                                      '2026-07-02',
+  'Форматы работы: что входит в каждый пакет':                                  '2026-07-03',
+
+  // === ИЮЛЬ — Поддержание + новые сегменты ===
+  'Разбор чужого контента: что работает, а что нет':                            '2026-07-06',
+  'Как я провожу аудит маркетинга за 2 часа':                                  '2026-07-07',
+  'Что происходит на первой встрече с клиентом':                               '2026-07-08',
+  'Почему я не берусь за проект без предварительного аудита':                   '2026-07-09',
+  '«Нам нужны результаты сразу» — говорим честно о сроках':                    '2026-07-10',
+  'Мой рабочий день: как выглядит удалёнка':                                   '2026-07-13',
+  'Как я пришла в маркетинг — честная история':                                '2026-07-14',
+  'Книги, которые изменили моё мышление в маркетинге':                         '2026-07-15',
+  'Цели на 2026 — говорю честно':                                              '2026-07-16',
+  'Почему дешёвый маркетолог обходится дороже хорошего':                        '2026-07-17',
+  'Как я меряю эффективность своей работы':                                    '2026-07-20',
+  'Почему я всегда пишу отчёт, даже если всё хорошо':                          '2026-07-21',
+  'Что я умею делать и чего не умею — честная карта навыков':                  '2026-07-22',
+  'Три момента, когда бизнес теряет клиента навсегда':                         '2026-07-23',
+  'Мифы о маркетинге, в которые верят собственников':                          '2026-07-24',
+  'Как работаю с несколькими проектами и не теряю качество':                   '2026-07-27',
+  'Что должно быть в кейсе, которому можно доверять':                          '2026-07-28',
+  'Как выглядит мой отчёт':                                                    '2026-07-29',
+  'Почему я говорю клиенту о проблемах, а не скрываю':                        '2026-07-30',
+  '«Наша ниша особенная, там реклама не работает»':                            '2026-07-31',
+
+  // === THREADS — посты-вопросы (вт + сб, 2 раза в неделю) ===
+  'Какой пост в вашей ленте за последний месяц реально захотелось переслать другу — и почему?': '2026-05-05',
+  'Назовите одну вещь, которую вам говорил «эксперт», и она оказалась полной чушью':            '2026-05-09',
+  'Сколько постов в неделю — это уже перебор для собственника?':                                '2026-05-12',
+  'Если бы вам дали 100к на маркетинг прямо сейчас — куда вложили бы первым делом?':           '2026-05-16',
+  'ИИ заменит копирайтеров — да или ни в жизни?':                                              '2026-05-19',
+  'Что бесит в маркетологах больше всего: цена, нежелание вникать или красивое враньё в кейсах?': '2026-05-23',
+  'Кейсы с цифрами — обязательно или их можно заменить хорошими отзывами?':                    '2026-05-26',
+  'Самая дурацкая просьба клиента, с которой вы сталкивались?':                                '2026-05-30',
+  'Личный бренд маркетолога — must или хайп?':                                                 '2026-06-03',
+  'Вы бы взяли клиента, чей продукт вам не нравится, за хорошие деньги?':                      '2026-06-06',
+  'Telegram или VC.ru — где сейчас удобнее читать про маркетинг?':                             '2026-06-09',
+  'Цена в посте — отпугивает или фильтрует «не своих»?':                                       '2026-06-13',
+  'Маркетолог без своего блога — нормально или красные флаги?':                                '2026-06-16',
+  'Самый тупой совет про продвижение, который вы видели в этом году?':                         '2026-06-20',
+  'Кто из маркетологов в Telegram реально пишет интересно? Киньте 1 ссылку — изучу':           '2026-06-23',
+  'Какой формат контента вы лично НЕ читаете никогда?':                                       '2026-06-27',
+  'Платить за консультации экспертам — или это уже моветон?':                                  '2026-06-30',
+  'Что вы сделали для бизнеса в этом месяце, что реально дало результат?':                     '2026-07-04',
+
+  // === THREADS — широкие темы для ЦА (вт + сб с 7 июля) ===
+  'Сколько часов в неделю реально работает собственник — честно?':                             '2026-07-07',
+  'Главная ошибка в первый год бизнеса — у каждого своя?':                                     '2026-07-11',
+  'Какой налоговый режим у вашего бизнеса — и не жалеете ли о выборе?':                        '2026-07-14',
+  'Самый дорогой урок, который дал вам бизнес?':                                               '2026-07-18',
+  'Сколько лет вашему бизнесу — и какой год был самый сложный?':                              '2026-07-21',
+  'Если бы начинали свой бизнес сейчас — что сделали бы иначе?':                              '2026-07-25',
+  'Что съедает у собственника больше всего времени в бизнесе?':                                '2026-07-28',
+  'Самый дорогой сотрудник, которого вы наняли — оправдал?':                                  '2026-08-01',
+  'Дивиденды или зарплата — как вы платите себе из бизнеса?':                                  '2026-08-04',
+  'Сколько отпуска в году у вас реально — а не на бумаге?':                                   '2026-08-08',
+  'Делегировать или контролировать — где у вас проходит грань?':                              '2026-08-11',
+  'Когда последний раз вы выгорали — и как восстановились?':                                  '2026-08-15',
+  'Удалёнка для команды — выгоднее или, наоборот, геморройнее?':                              '2026-08-18',
+  'Где собственники реально хранят деньги, кроме расчётного счёта?':                           '2026-08-22',
+  'Платить выше рынка или больше учить — что выбираете для команды?':                          '2026-08-25',
+  'Кредит на бизнес — пользовались? Стоило?':                                                  '2026-08-29',
+  'Спорт и бизнес — успеваете заниматься или это миф?':                                       '2026-09-01',
+  'ИИ в малом бизнесе — где реально помогает, а где переоценён?':                              '2026-09-05',
+};
+
+// ==================== STATE ====================
+
+let topics = [];
+let editingId = null;
+let dragId = null;
+let activeKanbanFilter = { rubric: 'all' };
+let activeBankFilter = { rubric: 'all' };
+
+const DATA_VERSION = 5;
+
+function loadData() {
+  const saved = localStorage.getItem('content_factory_topics');
+  const savedVersion = parseInt(localStorage.getItem('content_factory_version') || '1');
+  if (saved) {
+    topics = JSON.parse(saved);
+    if (savedVersion < DATA_VERSION) {
+      const existingTitles = new Set(topics.map(t => t.title));
+      INITIAL_TOPICS.forEach((t, i) => {
+        if (!existingTitles.has(t.title)) {
+          topics.push({ ...t, id: 'topic_v2_' + i + '_' + Date.now() });
+        }
+      });
+      saveData();
+    }
+  } else {
+    topics = INITIAL_TOPICS.map((t, i) => ({ ...t, id: 'topic_' + Date.now() + '_' + i }));
+    saveData();
+  }
+  localStorage.setItem('content_factory_version', String(DATA_VERSION));
+
+  // Применяем расписание только туда, где дата ещё не стоит
+  let scheduleChanged = false;
+  topics.forEach(t => {
+    if (!t.scheduledDate && SCHEDULE[t.title]) {
+      t.scheduledDate = SCHEDULE[t.title];
+      scheduleChanged = true;
+    }
+  });
+  if (scheduleChanged) saveData();
+}
+
+function saveData() {
+  localStorage.setItem('content_factory_topics', JSON.stringify(topics));
+}
+
+// ==================== FILTERS ====================
+
+let kanbanRubricFilter = 'all';
+let bankRubricFilter = 'all';
+let calPlatformFilter = 'all';
+
+function setFilter(type, value, el) {
+  if (type === 'rubric') kanbanRubricFilter = value;
+  el.closest('.kanban-filters').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderKanban();
+}
+
+function setBankFilter(type, value, el) {
+  if (type === 'rubric') bankRubricFilter = value;
+  el.closest('.bank-filters').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderBank();
+}
+
+function setCalFilter(value, el) {
+  calPlatformFilter = value;
+  el.closest('.cal-filters').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderCalendar();
+}
+
+// ==================== RENDER RUBRIC FILTERS ====================
+
+function buildRubricFilters() {
+  const kanbanF = document.querySelector('.kanban-filters');
+  const bankF = document.querySelector('.bank-filters');
+
+  RUBRICS.forEach(r => {
+    const chip1 = document.createElement('button');
+    chip1.className = 'filter-chip';
+    chip1.textContent = r.label;
+    chip1.style.borderColor = 'transparent';
+    chip1.onclick = function() { setFilter('rubric', r.id, this); };
+    chip1.addEventListener('mouseenter', () => { if (!chip1.classList.contains('active')) chip1.style.borderColor = r.color + '44'; });
+    chip1.addEventListener('mouseleave', () => { if (!chip1.classList.contains('active')) chip1.style.borderColor = 'transparent'; });
+    kanbanF.appendChild(chip1);
+
+    const chip2 = document.createElement('button');
+    chip2.className = 'filter-chip';
+    chip2.textContent = r.label;
+    chip2.style.borderColor = 'transparent';
+    chip2.onclick = function() { setBankFilter('rubric', r.id, this); };
+    chip2.addEventListener('mouseenter', () => { if (!chip2.classList.contains('active')) chip2.style.borderColor = r.color + '44'; });
+    chip2.addEventListener('mouseleave', () => { if (!chip2.classList.contains('active')) chip2.style.borderColor = 'transparent'; });
+    bankF.appendChild(chip2);
+  });
+
+  // Populate rubric select in modal
+  const sel = document.getElementById('f-rubric');
+  RUBRICS.forEach(r => {
+    const opt = document.createElement('option');
+    opt.value = r.id;
+    opt.textContent = r.label;
+    sel.appendChild(opt);
+  });
+}
+
+function buildCalendarFilters() {
+  const cf = document.getElementById('cal-filters');
+  PLATFORMS.filter(p => p.active).forEach(p => {
+    const chip = document.createElement('button');
+    chip.className = 'filter-chip';
+    chip.textContent = p.label;
+    chip.onclick = function() { setCalFilter(p.label, this); };
+    cf.appendChild(chip);
+  });
+}
+
+// ==================== TABS ====================
+
+function switchTab(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  el.classList.add('active');
+  if (id === 'overview') renderOverview();
+  if (id === 'kanban') renderKanban();
+  if (id === 'bank') renderBank();
+  if (id === 'calendar') renderCalendar();
+}
+
+// ==================== OVERVIEW ====================
+
+function renderOverview() {
+  const total = topics.length;
+  const byStatus = { idea: 0, wip: 0, done: 0, pub: 0 };
+  topics.forEach(t => { if (byStatus[t.status] !== undefined) byStatus[t.status]++; });
+
+  const scheduled = topics.filter(t => t.scheduledDate).length;
+  const grid = document.getElementById('stats-grid');
+  grid.innerHTML = `
+    <div class="stat-card"><div class="stat-label">Всего тем</div><div class="stat-value">${total}</div><div class="stat-sub">в банке идей</div></div>
+    <div class="stat-card" style="--accent: #2460b8"><div class="stat-label">В работе</div><div class="stat-value" style="color:#2460b8">${byStatus.wip}</div><div class="stat-sub">пишется сейчас</div></div>
+    <div class="stat-card" style="--accent: #158060"><div class="stat-label">Готово</div><div class="stat-value" style="color:#158060">${byStatus.done}</div><div class="stat-sub">ждут публикации</div></div>
+    <div class="stat-card"><div class="stat-label">Запланировано</div><div class="stat-value">${scheduled}</div><div class="stat-sub">в календаре</div></div>
+  `;
+
+  const rubricBars = document.getElementById('rubric-bars');
+  const maxCount = Math.max(...RUBRICS.map(r => topics.filter(t => t.rubric === r.id).length), 1);
+  rubricBars.innerHTML = RUBRICS.map(r => {
+    const count = topics.filter(t => t.rubric === r.id).length;
+    const pct = Math.round(count / maxCount * 100);
+    return `<div class="rubric-bar">
+      <div class="rubric-dot" style="background:${r.color}"></div>
+      <span class="rubric-name">${r.label}</span>
+      <div class="rubric-track"><div class="rubric-fill" style="width:${pct}%;background:${r.color}"></div></div>
+      <span class="rubric-count">${count}</span>
+    </div>`;
+  }).join('');
+
+  const platStats = document.getElementById('platform-stats');
+  platStats.innerHTML = PLATFORMS.map(p => {
+    const count = topics.filter(t => t.platforms && t.platforms.some(pl => pl.toLowerCase().includes(p.label.toLowerCase()))).length;
+    return `<div class="platform-row">
+      <span class="platform-badge ${p.active ? 'platform-active' : 'platform-next'}">${p.label}</span>
+      <span class="platform-stat">${p.active ? count + ' тем' : 'Следующий этап'}</span>
+    </div>`;
+  }).join('');
+}
+
+// ==================== KANBAN ====================
+
+function renderKanban() {
+  const cols = ['idea', 'wip', 'done', 'pub'];
+  cols.forEach(status => {
+    const col = document.getElementById('col-' + status);
+    const filtered = topics.filter(t => {
+      if (t.status !== status) return false;
+      if (kanbanRubricFilter !== 'all' && t.rubric !== kanbanRubricFilter) return false;
+      return true;
+    });
+    if (filtered.length === 0) {
+      col.innerHTML = '<div class="empty-col">Перетащи карточку сюда</div>';
+    } else {
+      col.innerHTML = filtered.map(t => renderCard(t)).join('');
+    }
+    document.getElementById('cnt-' + status).textContent = filtered.length;
+  });
+}
+
+function renderCard(t) {
+  const rubric = RUBRICS.find(r => r.id === t.rubric) || RUBRICS[0];
+  const platforms = (t.platforms || []).map(p => `<span class="card-platform">${p}</span>`).join('');
+  const seo = t.seo ? '<span class="card-seo">SEO</span>' : '';
+  return `<div class="card" id="card-${t.id}" draggable="true"
+    ondragstart="onDragStart(event, '${t.id}')"
+    ondragend="onDragEnd(event)">
+    <div class="card-rubric" style="color:${rubric.color}">
+      <div class="card-rubric-dot" style="background:${rubric.color}"></div>
+      ${rubric.label}
+    </div>
+    <div class="card-title">${t.title}</div>
+    <div class="card-meta">${platforms}${seo}</div>
+    <div class="card-actions">
+      <button class="card-btn" onclick="editCard('${t.id}')">✎</button>
+      <button class="card-btn del" onclick="deleteCard('${t.id}')">✕</button>
+    </div>
+  </div>`;
+}
+
+// ==================== BANK ====================
+
+function renderBank() {
+  const q = document.getElementById('bank-search').value.toLowerCase();
+  const grid = document.getElementById('bank-grid');
+  const filtered = topics.filter(t => {
+    if (bankRubricFilter !== 'all' && t.rubric !== bankRubricFilter) return false;
+    if (q && !t.title.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div style="color:var(--text3);font-style:italic;padding:20px">Ничего не найдено</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(t => {
+    const rubric = RUBRICS.find(r => r.id === t.rubric) || RUBRICS[0];
+    const platforms = (t.platforms || []).map(p => `<span class="card-platform">${p}</span>`).join('');
+    const seo = t.seo ? '<span class="card-seo">SEO</span>' : '';
+    const statusMap = { idea: ['status-idea', 'Идея'], wip: ['status-wip', 'В работе'], done: ['status-done', 'Готово'], pub: ['status-pub', 'Опубликовано'] };
+    const [cls, lbl] = statusMap[t.status] || statusMap.idea;
+    return `<div class="bank-card">
+      <div class="bank-card-rubric" style="color:${rubric.color}">
+        <div class="card-rubric-dot" style="background:${rubric.color}"></div>
+        ${rubric.label}
+      </div>
+      <div class="bank-card-title">${t.title}</div>
+      <div class="bank-card-meta">
+        <span class="status-badge ${cls}">${lbl}</span>
+        ${platforms}${seo}
+      </div>
+      <button class="bank-add-btn" onclick="editCard('${t.id}')" title="Редактировать">✎</button>
+    </div>`;
+  }).join('');
+}
+
+// ==================== DRAG & DROP ====================
+
+function onDragStart(e, id) {
+  dragId = id;
+  setTimeout(() => { const el = document.getElementById('card-' + id); if (el) el.classList.add('dragging'); }, 0);
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function onDragEnd(e) {
+  if (dragId) {
+    const el = document.getElementById('card-' + dragId);
+    if (el) el.classList.remove('dragging');
+  }
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+
+function onDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function onDrop(e, status) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!dragId) return;
+  const topic = topics.find(t => t.id === dragId);
+  if (topic) {
+    topic.status = status;
+    saveData();
+    renderKanban();
+    renderOverview();
+  }
+  dragId = null;
+}
+
+// ==================== MODAL ====================
+
+function openModal(prefillData) {
+  editingId = null;
+  document.getElementById('modal-title').textContent = 'Новая тема';
+  document.getElementById('f-title').value = '';
+  document.getElementById('f-rubric').value = 'pain';
+  document.getElementById('f-status').value = 'idea';
+  document.getElementById('f-platforms').value = 'Telegram';
+  document.getElementById('f-seo').value = '';
+  document.getElementById('f-date').value = '';
+  document.getElementById('f-notes').value = '';
+  if (prefillData) {
+    Object.assign(document.getElementById('f-title'), { value: prefillData.title || '' });
+    if (prefillData.rubric) document.getElementById('f-rubric').value = prefillData.rubric;
+  }
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('f-title').focus(), 100);
+}
+
+function editCard(id) {
+  const t = topics.find(t => t.id === id);
+  if (!t) return;
+  editingId = id;
+  document.getElementById('modal-title').textContent = 'Редактировать тему';
+  document.getElementById('f-title').value = t.title;
+  document.getElementById('f-rubric').value = t.rubric;
+  document.getElementById('f-status').value = t.status;
+  document.getElementById('f-platforms').value = (t.platforms || []).join(', ');
+  document.getElementById('f-seo').value = t.seo || '';
+  document.getElementById('f-date').value = t.scheduledDate || '';
+  document.getElementById('f-notes').value = t.notes || '';
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('f-title').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function saveCard() {
+  const title = document.getElementById('f-title').value.trim();
+  if (!title) { document.getElementById('f-title').focus(); return; }
+
+  const data = {
+    title,
+    rubric: document.getElementById('f-rubric').value,
+    status: document.getElementById('f-status').value,
+    platforms: document.getElementById('f-platforms').value.split(',').map(s => s.trim()).filter(Boolean),
+    seo: document.getElementById('f-seo').value,
+    scheduledDate: document.getElementById('f-date').value || undefined,
+    notes: document.getElementById('f-notes').value.trim(),
+  };
+
+  if (editingId) {
+    const idx = topics.findIndex(t => t.id === editingId);
+    if (idx !== -1) topics[idx] = { ...topics[idx], ...data };
+  } else {
+    topics.push({ ...data, id: 'topic_' + Date.now() });
+  }
+
+  saveData();
+  closeModal();
+  renderKanban();
+  renderBank();
+  renderOverview();
+}
+
+function deleteCard(id) {
+  if (!confirm('Удалить тему?')) return;
+  topics = topics.filter(t => t.id !== id);
+  saveData();
+  renderKanban();
+  renderBank();
+  renderOverview();
+}
+
+// ==================== EXPORT ====================
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(topics, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'content_factory_backup_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+}
+
+// ==================== KEYBOARD ====================
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+    if (document.getElementById('modal-overlay').classList.contains('open')) saveCard();
+  }
+});
+
+// ==================== CALENDAR ====================
+
+let calDate = new Date();
+let schedulingDate = null;
+
+const MONTHS_RU = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const MONTHS_GENITIVE = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+
+function renderCalendar() {
+  const year = calDate.getFullYear();
+  const month = calDate.getMonth();
+
+  document.getElementById('cal-month-title').textContent = MONTHS_RU[month] + ' ' + year;
+
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+
+  let startDow = firstDay.getDay();
+  if (startDow === 0) startDow = 7;
+  startDow -= 1;
+
+  const todayStr = new Date().toISOString().slice(0, 10);
+
+  const cells = [];
+  for (let i = 0; i < startDow; i++) {
+    cells.push({ date: new Date(year, month, 1 - startDow + i), thisMonth: false });
+  }
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    cells.push({ date: new Date(year, month, d), thisMonth: true });
+  }
+  const remaining = (7 - (cells.length % 7)) % 7;
+  for (let i = 1; i <= remaining; i++) {
+    cells.push({ date: new Date(year, month + 1, i), thisMonth: false });
+  }
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = cells.map(cell => {
+    const dateStr = cell.date.toISOString().slice(0, 10);
+    const dayTopics = topics.filter(t => {
+      if (t.scheduledDate !== dateStr) return false;
+      if (t.status === 'idea') return false;
+      if (calPlatformFilter !== 'all' && !(t.platforms || []).includes(calPlatformFilter)) return false;
+      return true;
+    });
+    const isToday = dateStr === todayStr;
+    const chips = dayTopics.map(t => {
+      const rubric = RUBRICS.find(r => r.id === t.rubric) || RUBRICS[0];
+      return `<span class="cal-chip" style="background:${rubric.color}" onclick="event.stopPropagation();editCard('${t.id}')" title="${t.title}">${t.title}</span>`;
+    }).join('');
+
+    return `<div class="cal-day${!cell.thisMonth ? ' other-month' : ''}${isToday ? ' today' : ''}" onclick="openSchedule('${dateStr}')">
+      <div class="cal-day-num">${cell.date.getDate()}</div>
+      ${chips}
+      <span class="cal-add-hint">+ добавить</span>
+    </div>`;
+  }).join('');
+}
+
+function prevMonth() {
+  calDate = new Date(calDate.getFullYear(), calDate.getMonth() - 1, 1);
+  renderCalendar();
+}
+
+function nextMonth() {
+  calDate = new Date(calDate.getFullYear(), calDate.getMonth() + 1, 1);
+  renderCalendar();
+}
+
+function goToday() {
+  calDate = new Date();
+  renderCalendar();
+}
+
+function openSchedule(dateStr) {
+  schedulingDate = dateStr;
+  const d = new Date(dateStr + 'T12:00:00');
+  document.getElementById('schedule-date-title').textContent =
+    d.getDate() + ' ' + MONTHS_GENITIVE[d.getMonth()] + ' ' + d.getFullYear();
+  document.getElementById('schedule-search').value = '';
+  document.getElementById('schedule-overlay').classList.add('open');
+  renderScheduleList();
+  setTimeout(() => document.getElementById('schedule-search').focus(), 100);
+}
+
+function closeSchedule() {
+  document.getElementById('schedule-overlay').classList.remove('open');
+  schedulingDate = null;
+}
+
+function closeScheduleOutside(e) {
+  if (e.target === document.getElementById('schedule-overlay')) closeSchedule();
+}
+
+function renderScheduleList() {
+  const q = document.getElementById('schedule-search').value.toLowerCase();
+  const list = document.getElementById('schedule-list');
+
+  const scheduled = topics.filter(t => t.scheduledDate === schedulingDate);
+  const available = topics.filter(t => {
+    if (t.scheduledDate === schedulingDate) return false;
+    if (q && !t.title.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  let html = '';
+
+  if (scheduled.length > 0) {
+    html += `<div class="schedule-section-label">Запланировано на этот день</div>`;
+    html += scheduled.map(t => {
+      const rubric = RUBRICS.find(r => r.id === t.rubric) || RUBRICS[0];
+      const statusMap = { idea: 'Идея', wip: 'В работе', done: 'Готово', pub: 'Опубликовано' };
+      return `<div class="schedule-item schedule-item-active">
+        <div class="schedule-dot" style="background:${rubric.color}"></div>
+        <div style="flex:1">
+          <div class="schedule-title">${t.title}</div>
+          <div class="schedule-meta">${rubric.label} · ${statusMap[t.status] || ''}</div>
+        </div>
+        <button class="schedule-remove" onclick="event.stopPropagation();removeSchedule('${t.id}')" title="Убрать из этого дня">&#x2715;</button>
+      </div>`;
+    }).join('');
+    if (available.length > 0 || q) {
+      html += `<div class="schedule-divider"></div>`;
+    }
+  }
+
+  if (available.length > 0) {
+    if (!q) html += `<div class="schedule-section-label">Назначить тему</div>`;
+    html += available.slice(0, 40).map(t => {
+      const rubric = RUBRICS.find(r => r.id === t.rubric) || RUBRICS[0];
+      const otherDate = t.scheduledDate ? `<span style="color:var(--text3)"> · ${t.scheduledDate}</span>` : '';
+      return `<div class="schedule-item" onclick="assignDate('${t.id}')">
+        <div class="schedule-dot" style="background:${rubric.color}"></div>
+        <div style="flex:1">
+          <div class="schedule-title">${t.title}</div>
+          <div class="schedule-meta">${rubric.label}${otherDate}</div>
+        </div>
+      </div>`;
+    }).join('');
+  } else if (scheduled.length === 0) {
+    html = `<div style="color:var(--text3);font-style:italic;padding:16px 0">Ничего не найдено</div>`;
+  }
+
+  list.innerHTML = html;
+}
+
+function assignDate(topicId) {
+  const t = topics.find(t => t.id === topicId);
+  if (t) {
+    t.scheduledDate = schedulingDate;
+    if (t.status === 'idea') t.status = 'wip';
+    saveData();
+    renderScheduleList();
+    renderCalendar();
+  }
+}
+
+function removeSchedule(topicId) {
+  const t = topics.find(t => t.id === topicId);
+  if (t) {
+    delete t.scheduledDate;
+    saveData();
+    renderScheduleList();
+    renderCalendar();
+  }
+}
+
+// ==================== INIT ====================
+
+loadData();
+buildRubricFilters();
+buildCalendarFilters();
+renderOverview();
+</script>
+</body>
+</html>
