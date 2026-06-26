@@ -1414,7 +1414,7 @@ let dragId = null;
 let activeKanbanFilter = { rubric: 'all' };
 let activeBankFilter = { rubric: 'all' };
 
-const DATA_VERSION = 6;
+const DATA_VERSION = 7;
 
 function loadData() {
   const saved = localStorage.getItem('content_factory_topics');
@@ -1428,6 +1428,12 @@ function loadData() {
           topics.push({ ...t, id: 'topic_v2_' + i + '_' + Date.now() });
         }
       });
+      // v7: убираем таргет-посты с календаря (остаются в банке как идеи) — упор на таргет пока не делаем
+      if (savedVersion < 7) {
+        topics.forEach(t => {
+          if (/таргет/i.test(t.title)) { t.status = 'idea'; delete t.scheduledDate; }
+        });
+      }
       saveData();
     }
   } else {
