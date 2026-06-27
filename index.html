@@ -1269,6 +1269,18 @@ const INITIAL_TOPICS = [
   { title: 'Столб 4 · Нужен ли вашему бизнесу блог, если вы не блогер', rubric: 'objection', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: '' },
   { title: 'Столб 5 · Я отдала маркетинг нейросети на неделю — почему бизнесу нужен человек', rubric: 'personal', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: '' },
   { title: 'Столб 6 (запас) · Где ИИ-маркетинг хайп, а где реальные деньги', rubric: 'objection', status: 'idea', platforms: ['Telegram'], seo: '' },
+
+  // ==================== КЕЙСЫ С ЦИФРАМИ (из реальных проектов, 2026-06-27) ====================
+  { title: 'Кейс ⭐ Веду аккаунт хирурга: 8,3 млн органических просмотров за квартал, 0₽ рекламы', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: 'seo' },
+  { title: 'Кейс · Каждый день 1–4 заявки на премиум-операцию без рекламы. Как', rubric: 'expert', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Кейс · 1 ролик → 996 действий в профиле: что такое работающий контент', rubric: 'expert', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Процесс · Instagram удаляет наши ролики, а охваты держатся. Работа в нише, которую душит площадка', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Кейс · Автосервис Москва: 30 заявок за 17 дней января, 1000+ за 2 года', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: 'seo' },
+  { title: 'Процесс · Почему мои клиенты работают со мной по 2–4 года (список сроков)', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Возражение · Реклама не даёт стабильность раз и навсегда — и что с этим делать', rubric: 'objection', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Личное · Почему эксперты обесценивают свою работу (и теряют на этом клиентов)', rubric: 'personal', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Личное · Маркетинг с ИИ и головой: конференция, презентация и дизайн через нейросети', rubric: 'personal', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Кейс · Как получить записи без новых лидов: работа с тёплой базой', rubric: 'expert', status: 'idea', platforms: ['Telegram'], seo: '' },
 ];
 
 // ==================== SCHEDULE ====================
@@ -1414,7 +1426,7 @@ let dragId = null;
 let activeKanbanFilter = { rubric: 'all' };
 let activeBankFilter = { rubric: 'all' };
 
-const DATA_VERSION = 8;
+const DATA_VERSION = 9;
 
 function loadData() {
   const saved = localStorage.getItem('content_factory_topics');
