@@ -1281,6 +1281,26 @@ const INITIAL_TOPICS = [
   { title: 'Личное · Почему эксперты обесценивают свою работу (и теряют на этом клиентов)', rubric: 'personal', status: 'idea', platforms: ['Telegram'], seo: '' },
   { title: 'Личное · Маркетинг с ИИ и головой: конференция, презентация и дизайн через нейросети', rubric: 'personal', status: 'idea', platforms: ['Telegram'], seo: '' },
   { title: 'Кейс · Как получить записи без новых лидов: работа с тёплой базой', rubric: 'expert', status: 'idea', platforms: ['Telegram'], seo: '' },
+
+  // ==================== КЕЙСЫ — атомизация, 2-я волна (2026-06-27) ====================
+  { title: 'Кейс · Почему я перестала мерить успех подписчиками', rubric: 'expert', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Процесс · Что входит в ведение аккаунта: снимаю, монтирую, веду', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Кейс · Как один ролик приводит клиентов полгода (контент = скважина)', rubric: 'expert', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: 'seo' },
+  { title: 'Процесс · До и после ИИ в монтаже: как нейросеть ускоряет работу', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Процесс · Как вести медицинский аккаунт под ограничениями площадки', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Кейс · 1000+ заявок за 2 года: длинная игра вместо быстрых обещаний', rubric: 'expert', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Кейс · ~700 ₽ за обращение: сколько на самом деле стоит клиент', rubric: 'expert', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Процесс · Январь — мёртвый сезон в сервисе. Как держать поток', rubric: 'process', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: 'seo' },
+  { title: 'Обсуждение · Сколько подрядчиков вы сменили за год?', rubric: 'discussion', status: 'idea', platforms: ['Telegram', 'Threads'], seo: '' },
+  { title: 'Личное · Что я делаю, когда проект идёт не так: остаюсь и чиню', rubric: 'personal', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Возражение · Зачем работать в долгую, если можно «настроить и уйти»', rubric: 'objection', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Процесс · Почему я регулярно тестирую новый рекламный кабинет', rubric: 'process', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Кейс · Не списывайте тех, кто не купил сразу: в премиуме решение долгое', rubric: 'expert', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Возражение · Почему дешёвые лиды не всегда покупают', rubric: 'objection', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Личное · Где ИИ помогает в маркетинге, а где решает голова', rubric: 'personal', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Личное · Я годами отдавала свои заслуги другим. Как это чинить', rubric: 'personal', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Личное · 5 ниш, в которых я работаю, и чем они различаются', rubric: 'personal', status: 'idea', platforms: ['Telegram'], seo: '' },
+  { title: 'Сравнение · Контент vs таргет: что реально приводит клиентов', rubric: 'compare', status: 'idea', platforms: ['Telegram', 'Дзен'], seo: 'seo' },
 ];
 
 // ==================== SCHEDULE ====================
@@ -1426,7 +1446,7 @@ let dragId = null;
 let activeKanbanFilter = { rubric: 'all' };
 let activeBankFilter = { rubric: 'all' };
 
-const DATA_VERSION = 9;
+const DATA_VERSION = 10;
 
 function loadData() {
   const saved = localStorage.getItem('content_factory_topics');
